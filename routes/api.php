@@ -18,4 +18,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::apiResource('person', \App\Http\Controllers\PersonController::class);
+Route::apiResource('video', \App\Http\Controllers\VideoController::class);
 Route::apiResource('history', \App\Http\Controllers\HistoryChatController::class);

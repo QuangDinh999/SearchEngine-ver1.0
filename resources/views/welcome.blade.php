@@ -54,9 +54,82 @@
                 </div>
             </div>
         </form>
-        <button class="btn btn-secondary square-rounded" type="button">
-            <i class="mdi mdi-attachment"></i>
+        <button class="btn btn-outline-info" onclick="openForm()"> <i class="mdi mdi-account-search"></i>
+            Person Searching
         </button>
+        <button class="btn btn-inverse-success" onclick="openForm2()"> <i class="mdi mdi-camera-iris"></i>
+            Upload Photo/Video
+        </button>
+
+
+        <div class="form-popup" id="myForm">
+            <form action="/action_page.php" class="form-container">
+                <h1 style="text-align: center;">Add Input Here</h1>
+
+                <label for="name"><b>Name</b></label>
+                <input type="text" placeholder="Enter Name" name="name" required>
+
+                <label for="age"><b>Age</b></label>
+                <input type="number" placeholder="Enter Age" name="age" required>
+
+                <label for="gender"><b>Gender</b></label><br>
+                <input type="radio" id="male" name="gender" value="male">
+                <label for="male">Male</label><br>
+                <input type="radio" id="female" name="gender" value="female">
+                <label for="female">Female</label><br>
+
+                <label for="phone"><b>Phone</b></label>
+                <input type="tel" placeholder="Enter Phone Number" name="phone" required>
+
+                <label for="mail"><b>Email</b></label>
+                <input type="email" placeholder="Enter Email" name="email" required><br>
+
+                <label for="cccd"><b>CCCD</b></label>
+                <input type="text" placeholder="Enter CCCD" name="cccd" required>
+
+                <label for="address"><b>Address</b></label>
+                <input type="text" placeholder="Enter Address" name="address" required><br>
+
+                <label for="picture" id="picture-label"><b>Picture</b></label><br>
+                <input type="file" id="picture" name="picture" accept="image/*" onchange="displaySelectedImage(event)">
+                <button type="button" onclick="removePicture()">Remove</button><br>
+
+                <!-- Thẻ img để hiển thị hình ảnh được chọn -->
+                <img id="selected-image" src="#" alt="Selected Image" style="display: none; max-width: 300px; max-height: 300px;">
+
+                <button type="submit" class="btn">
+                    <i class="mdi mdi-arrow-up"></i>Search Now</button>
+                <button type="button" class="close-btn" onclick="closeForm()">
+                    <i class="mdi mdi-close" style="color: red;"></i> <!-- Sử dụng icon dấu x màu đỏ -->
+                </button>
+            </form>
+
+
+        </div>
+        <div class="form-popup" id="myForm2">
+            <form action="/upload" class="form-container" enctype="multipart/form-data">
+                <h1>Upload Photo/Video</h1>
+
+                <!-- Ô nhập message -->
+                <label for="message"><b>Message</b></label>
+                <input id="message" name="message" placeholder="Enter your message" required><br>
+
+                <!-- Ô chọn file -->
+                <label for="file"><b>File</b></label>
+                <input type="file" id="file" name="file" accept="image/*, video/*" onchange="displayDemoMedia(event)" required>
+
+                <!-- Hiển thị hình ảnh demo -->
+                <img id="demo-image" src="#" alt="Demo Image" style="display: none; max-width: 300px; max-height: 300px;">
+
+                <!-- Hiển thị video demo -->
+                <video id="demo-video" src="#" controls style="display: none; max-width: 300px;"></video>
+
+                <button type="submit" class="btn"><i class="mdi mdi-arrow-up"></i>Send</button>
+                <button type="button" class="close-btn" onclick="closeForm2()"> <i class="mdi mdi-close" style="color: red;"></i></button>
+            </form>
+        </div>
+        <div class="overlay" id="overlay"></div>
+    </div>
     </div>
     <style>
         .content {
@@ -115,6 +188,7 @@
         }
 
         .system-chat {
+            width: 50%;
             align-self: flex-start; /* Đặt hệ thống chat ở bên trái */
         }
 
@@ -220,6 +294,44 @@
             margin-bottom: 10px;
         }
 
+        .video-container {
+            position: relative;
+            width: 100%; /* Điều chỉnh kích thước video container tại đây */
+            padding-bottom: 1.25%; /* Tỷ lệ khung hình 16:9 (56.25% = 9/16 * 100) */
+        }
+
+        .video-container iframe {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 240px;
+        }
+
+        .form-popup {
+            display: none;
+            position: fixed;
+            z-index: 9;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; /* Điều chỉnh chiều rộng của form */
+            max-width: 600px; /* Giới hạn chiều rộng tối đa của form */
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 8;
+        }
     </style>
 
 
@@ -227,25 +339,26 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <script>
+    function openForm() {
+        document.getElementById("myForm").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+    }
 
-    // thêm onclick="SubmitSearch()" ở button hàm lấy dữ liệu về chưa render
-    {{--function SubmitSearch() {--}}
-    {{--    var search_word = document.getElementById('search_word').value;--}}
-    {{--    console.log(search_word)--}}
-    {{--    $.ajax({--}}
-    {{--        url: "{{ route('person.search') }}",--}}
-    {{--        type: "GET",--}}
-    {{--        data: { data: search_word },--}}
-    {{--        success: function(response) {--}}
-    {{--            // Xử lý phản hồi từ máy chủ--}}
-    {{--            console.log(response);--}}
-    {{--        },--}}
-    {{--        error: function(xhr) {--}}
-    {{--            // Xử lý lỗi nếu có--}}
-    {{--            console.error(xhr.responseText);--}}
-    {{--        }--}}
-    {{--    })--}}
-    {{--}--}}
+    function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+    function openForm2() {
+        document.getElementById("myForm2").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    function closeForm2() {
+        document.getElementById("myForm2").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+
+
     document.addEventListener('DOMContentLoaded', function () {
         const searchForm = document.querySelector('.search-form');
         const chatContainer = document.querySelector('.chat-container');
@@ -274,17 +387,61 @@
         });
         $('#search_word').keypress(function(event) {
             if (event.keyCode === 13) {
-
                 var search_word = document.getElementById('search_word').value;
                 console.log(search_word);
-                $.ajax({
-                    url: "http://localhost/SearchEngine/public/api/person",
-                    type: "GET",
-                    data: { data: search_word },
-                    success: function(response) {
-                        console.log(response)
-                        var person = response.map(function (current, index){
-                            return `<div class="profile">
+                if (search_word.includes('video về')) {
+                    var words = search_word.split(' ')
+                    console.log(words)
+                    var keywordFound = false
+                    var keyword = ""
+
+                    for (var i = 0; i < words.length; i++){
+                        if(keywordFound === true){
+                            keyword += words[i] + " "
+                            console.log(keyword)
+                        }
+                        if (words[i] === "về"){
+                            keywordFound = true
+                        }
+                    }
+                    var newKW = keyword.trim()
+                    var apiKey = 'AIzaSyDX21ICxDf6k8wtYIF74K-hSCNwuxftA5o';
+                    var apiUrl = 'https://www.googleapis.com/youtube/v3/search?q=' + newKW + '&part=snippet&type=video&maxResults=1&key=' + apiKey;
+                    $.ajax({
+                        url: apiUrl,
+                        type: "GET",
+                        data: newKW,
+                        success: function (response){
+                            // Lấy link video đầu tiên từ kết quả tìm kiếm
+                            var videoId = response.items[0].id.videoId;
+                            console.log(videoId)
+                            var videoLink = 'https://www.youtube.com/embed/' + videoId;
+
+                            // Nhúng video vào trang web của bạn
+                            var videoContainer = document.createElement('div');
+                            videoContainer.classList.add('video-container');
+                            videoContainer.innerHTML = '<iframe src="' + videoLink + '" allowfullscreen></iframe>';
+
+                            const systemMessage = document.createElement('div');
+                            systemMessage.classList.add('chat-bubble', 'system-chat');
+                            systemMessage.innerHTML = '<span class="message">Hệ thống trả lời:</span>';
+                            systemMessage.appendChild(videoContainer);
+
+                            chatContainer.appendChild(systemMessage);
+                        },
+                        error: function (xhr) {
+                            console.error(xhr.responseText);
+                        }
+                    })
+                }else {
+                    $.ajax({
+                        url: "http://localhost/SearchEngine/public/api/person",
+                        type: "GET",
+                        data: { data: search_word },
+                        success: function(response) {
+                            console.log(response)
+                            var person = response.map(function (current, index){
+                                return `<div class="profile">
                                                <img class="profile-picture" src="${current.image}">
                                           <div class="profile-info">
                                             <p>Tên: ${current.name}</p>
@@ -297,7 +454,7 @@
                                             <p>Biography: ${current.Biography}</p>
                                           </div>
                                         </div>`;
-                        });
+                            });
 
                             $.ajax({
                                 url: "{{route('history.search')}}",
@@ -346,17 +503,18 @@
                                     console.error(xhr.responseText);
                                 }
                             })
-                        const systemMessage = document.createElement('div');
-                        systemMessage.classList.add('chat-bubble', 'system-chat');
-                        systemMessage.innerHTML = `<span class="message">Hệ thống trả lời:</span>${person.join('')}`;
+                            const systemMessage = document.createElement('div');
+                            systemMessage.classList.add('chat-bubble', 'system-chat');
+                            systemMessage.innerHTML = `<span class="message">Hệ thống trả lời:</span>${person.join('')}`;
 
-                        chatContainer.appendChild(systemMessage);
-                    },
-                    error: function(xhr) {
-                        // Xử lý lỗi nếu có
-                        console.error(xhr.responseText);
-                    }
-                });
+                            chatContainer.appendChild(systemMessage);
+                        },
+                        error: function(xhr) {
+                            // Xử lý lỗi nếu có
+                            console.error(xhr.responseText);
+                        }
+                    })
+                }
             }
         });
 
