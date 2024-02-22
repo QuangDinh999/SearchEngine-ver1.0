@@ -24,6 +24,7 @@
 {{--    <link rel="stylesheet" href="{{asset('assets/css/app.css')}}">--}}
   <!-- common css -->
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
   <!-- end common css -->
 
 
@@ -47,25 +48,8 @@
 
 
   <script src="{{asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
-  <!-- end base js -->
-
-  <!-- plugin js -->
-
-  <!-- end plugin js -->
-
-  <!-- common js -->
-  <script src="{{asset('assets/js/chart.js')}}"></script>
-  <script src="{{asset('assets/js/off-canvas.js')}}"></script>
-  <script src="{{asset('assets/js/hoverable-collapse.js')}}"></script>
-  <script src="{{asset('assets/js/misc.js')}}"></script>
-  <script src="{{asset('assets/js/settings.js')}}"></script>
-  <script src="{{asset('assets/js/todolist.js')}}"></script>
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-{{--  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>--}}
-{{--  <script src="{{ asset('js/custom.js') }}"></script>--}}
-
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="{{asset('js/index.js')}}"></script>
 
 </body>
 </html>
