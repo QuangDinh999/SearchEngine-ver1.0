@@ -8,7 +8,7 @@
             <div class="grid-item">
                 <i class="menu-icon mdi mdi-account"></i>
                 <span class="menu-title">Give me a photo of a person. I can tell you
-                    his/her all bio informations I have.</span>
+                    his/her all bio information I have.</span>
             </div>
             <!-- Ô vuông 2 -->
             <div class="grid-item">
@@ -60,7 +60,21 @@
         <button class="btn btn-inverse-success" onclick="openForm2()" style="margin-top: 12px"> <i class="mdi mdi-camera-iris"></i>
             Upload Photo/Video
         </button>
-
+        <div class="container-fluid clearfix">
+            <!-- Container chứa uploadOptions và vùng trống -->
+            <div id="uploadOptions" class="upload-options">
+                <!-- Các tùy chọn upload -->
+                <button class="btn btn-outline-danger" onclick="uploadVideo()">
+                    <i class="mdi mdi-camera-iris"></i> Upload Video
+                </button>
+                <button class="btn btn-outline-success" onclick="uploadImage()">
+                    <i class="mdi mdi-picture-in-picture-bottom-right-outline"></i> Upload Image
+                </button>
+                <button class="btn btn-outline-warning" onclick="uploadAudio()">
+                    <i class="mdi mdi-music"></i> Upload Audio
+                </button>
+            </div>
+        </div>
 
         <div class="form-popup" id="myForm">
             <form action="/action_page.php" class="form-container">
@@ -107,30 +121,53 @@
 
         </div>
         <div class="form-popup" id="myForm2">
-            <form action="/upload" class="form-container" enctype="multipart/form-data">
-                <h1>Upload Photo/Video</h1>
+            <h1>Upload Photo/Video</h1>
+            <!-- Ô nhập message -->
+            <label for="message"><b>Message</b></label>
+            <input id="message" name="message" placeholder="Enter your message" required><br>
 
-                <!-- Ô nhập message -->
-                <label for="message"><b>Message</b></label>
-                <input id="message" name="message" placeholder="Enter your message" required><br>
+            <!-- Ô chọn file -->
+            <label for="file"><b>File</b></label>
+            <input id="image" type="file" id="file" name="file"  accept="image/*, video/*" onchange="displayDemoMedia(event)" required>
 
-                <!-- Ô chọn file -->
-                <label for="file"><b>File</b></label>
-                <input type="file" id="file" name="file" accept="image/*, video/*" onchange="displayDemoMedia(event)" required>
+            <!-- Hiển thị hình ảnh demo -->
+            <img id="demo-image" src="#" alt="Demo Image" style="display: none; max-width: 300px; max-height: 300px;">
 
-                <!-- Hiển thị hình ảnh demo -->
-                <img id="demo-image" src="#" alt="Demo Image" style="display: none; max-width: 300px; max-height: 300px;">
+            <!-- Hiển thị video demo -->
+            <video id="demo-video" src="#" controls style="display: none; max-width: 300px;"></video>
 
-                <!-- Hiển thị video demo -->
-                <video id="demo-video" src="#" controls style="display: none; max-width: 300px;"></video>
-
-                <button type="submit" class="btn"><i class="mdi mdi-arrow-up"></i>Send</button>
-                <button type="button" class="close-btn" onclick="closeForm2()"> <i class="mdi mdi-close" style="color: red;"></i></button>
-            </form>
+            <button onclick="SearchImage()" class="btn"><i class="mdi mdi-arrow-up"></i>Send</button>
+            <button type="button" class="close-btn" onclick="closeForm2()"> <i class="mdi mdi-close" style="color: red;"></i></button>
         </div>
         <div class="overlay" id="overlay"></div>
     </div>
     </div>
 
+
+    <script>
+        function SearchImage() {
+            var imgName = document.getElementById('image').value;
+            var search_word = document.getElementById('message').value;
+            console.log(imgName, search_word)
+        }
+        function displayDemoMedia(event) {
+            const file = event.target.files[0];
+            const fileType = file.type.split('/')[0]; // Lấy loại file
+
+            if (fileType === 'image') {
+                const img = document.getElementById('demo-image');
+                const video = document.getElementById('demo-video');
+                img.style.display = 'block';
+                video.style.display = 'none';
+                img.src = URL.createObjectURL(file);
+            } else if (fileType === 'video') {
+                const img = document.getElementById('demo-image');
+                const video = document.getElementById('demo-video');
+                img.style.display = 'none';
+                video.style.display = 'block';
+                video.src = URL.createObjectURL(file);
+            }
+        }
+    </script>
 @endsection
 
