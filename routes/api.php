@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('person', \App\Http\Controllers\PersonController::class);
 Route::apiResource('video', \App\Http\Controllers\VideoController::class);
 Route::apiResource('history', \App\Http\Controllers\HistoryChatController::class);
+Route::apiResource('image_search', \App\Http\Controllers\ImageSearchController::class);

@@ -143,31 +143,5 @@
     </div>
     </div>
 
-
-    <script>
-        function SearchImage() {
-            var imgName = document.getElementById('image').value;
-            var search_word = document.getElementById('message').value;
-            console.log(imgName, search_word)
-        }
-        function displayDemoMedia(event) {
-            const file = event.target.files[0];
-            const fileType = file.type.split('/')[0]; // Lấy loại file
-
-            if (fileType === 'image') {
-                const img = document.getElementById('demo-image');
-                const video = document.getElementById('demo-video');
-                img.style.display = 'block';
-                video.style.display = 'none';
-                img.src = URL.createObjectURL(file);
-            } else if (fileType === 'video') {
-                const img = document.getElementById('demo-image');
-                const video = document.getElementById('demo-video');
-                img.style.display = 'none';
-                video.style.display = 'block';
-                video.src = URL.createObjectURL(file);
-            }
-        }
-    </script>
 @endsection
 

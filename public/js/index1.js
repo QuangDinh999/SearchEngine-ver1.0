@@ -110,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             response.forEach(function (current) {
                                 const personProfile = document.createElement('div');
                                 personProfile.classList.add('chat-bubble', 'system-chat');
-                                // personProfile.classList.add('profile');
 
                                 const profilePicture = document.createElement('img');
                                 profilePicture.classList.add('chat-bubble', 'system-chat');
@@ -156,7 +155,57 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
+    function SearchImage() {
 
+        var imgPath = document.getElementById('image').value;
+        var search_word = document.getElementById('message').value;
+
+        var imgName = imgPath.split('\\').pop();
+        console.log(imgName, search_word)
+        const userMessage = document.createElement('div');
+        userMessage.classList.add('chat-bubble', 'user-chat');
+        userMessage.innerHTML = `<span class="message">${search_word}</span>
+                                     <img src="${imgPath}">`;
+
+        // Hiển thị tin nhắn của người dùng trong khung chat
+        chatContainer.appendChild(userMessage);
+
+        // Ẩn grid-container
+        gridContainer.classList.add('hidden');
+
+        // Xóa nội dung trong ô tìm kiếm sau khi đã xử lý
+        searchInput.value = '';
+
+        $.ajax({
+            url: "http://localhost/SearchEngine/public/api/image_search",
+            type: "GET",
+            data: imgName,
+            success: function (response){
+                console.log(response)
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+            }
+        })
+    }
+    function displayDemoMedia(event) {
+        const file = event.target.files[0];
+        const fileType = file.type.split('/')[0]; // Lấy loại file
+
+        if (fileType === 'image') {
+            const img = document.getElementById('demo-image');
+            const video = document.getElementById('demo-video');
+            img.style.display = 'block';
+            video.style.display = 'none';
+            img.src = URL.createObjectURL(file);
+        } else if (fileType === 'video') {
+            const img = document.getElementById('demo-image');
+            const video = document.getElementById('demo-video');
+            img.style.display = 'none';
+            video.style.display = 'block';
+            video.src = URL.createObjectURL(file);
+        }
+    }
     // Hàm thực hiện hiệu ứng animate từ trái sang phải cho hệ thống tin nhắn
     function animateSystemMessage(messageElement) {
         const messageText = messageElement.querySelector('.message');
@@ -204,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
-
 
 function displaySelectedImage(event) {
     var selectedImage = document.getElementById('selected-image');
